@@ -41,6 +41,21 @@ import {
   Circle,
   Radio,
   Sparkles,
+  Pin,
+  Maximize2,
+  ChevronRight,
+  ThumbsUp,
+  ThumbsDown,
+  Copy,
+  Download,
+  FileText,
+  Layers,
+  Building2,
+  User,
+  Package,
+  Hash,
+  Zap,
+  Shield,
 } from "lucide-react";
 
 type View = "inbox" | "active-call";
@@ -206,6 +221,9 @@ export default function Workspace() {
   const [showToast, setShowToast] = useState(false);
   const [toastExiting, setToastExiting] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [nowAssistOpen, setNowAssistOpen] = useState(false);
+  const [nowAssistExiting, setNowAssistExiting] = useState(false);
+  const [aiStepsOpen, setAiStepsOpen] = useState(true);
 
   const transcriptRef = useRef<HTMLDivElement>(null);
 
@@ -254,6 +272,20 @@ export default function Workspace() {
       setShowToast(false);
       setToastExiting(false);
     }, 240);
+  }
+
+  function openNowAssist() {
+    dismissToast();
+    setNowAssistExiting(false);
+    setNowAssistOpen(true);
+  }
+
+  function closeNowAssist() {
+    setNowAssistExiting(true);
+    setTimeout(() => {
+      setNowAssistOpen(false);
+      setNowAssistExiting(false);
+    }, 260);
   }
 
   useEffect(() => {
@@ -368,6 +400,7 @@ export default function Workspace() {
                 <Button
                   size="sm"
                   className="h-6 px-2.5 text-[11px] bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={openNowAssist}
                 >
                   Open
                 </Button>
@@ -685,6 +718,151 @@ export default function Workspace() {
           </div>
         </div>
       </div>
+
+      {/* Now Assist slide-over panel */}
+      {nowAssistOpen && (
+        <div
+          className={cn(
+            "fixed top-0 right-0 h-full w-[340px] bg-white border-l border-slate-200 shadow-2xl shadow-slate-900/15 z-40 flex flex-col",
+            nowAssistExiting ? "now-assist-exit" : "now-assist-enter"
+          )}
+        >
+          {/* Panel header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0 bg-slate-50/60">
+            <div className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded bg-blue-600 flex items-center justify-center shrink-0">
+                <Sparkles className="h-3.5 w-3.5 text-white" />
+              </div>
+              <span className="text-sm font-semibold text-slate-800">Now Assist</span>
+            </div>
+            <div className="flex items-center gap-0.5">
+              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <Maximize2 className="h-3.5 w-3.5" />
+              </button>
+              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <Pin className="h-3.5 w-3.5" />
+              </button>
+              <button
+                className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                onClick={closeNowAssist}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-y-auto">
+            {/* Section 1 — Plan title card */}
+            <div className="mx-4 mt-4 mb-3 rounded-lg bg-[#eaf4fb] border border-blue-100 px-4 py-3.5">
+              <p className="text-sm font-semibold text-slate-800 leading-snug mb-1">
+                Damage Claim Escalation Plan
+              </p>
+              <p className="text-[11.5px] text-slate-500 leading-relaxed">
+                Now Assist analyzed the conversation and prepared a recommended escalation workflow.
+              </p>
+            </div>
+
+            {/* Section 2 — AI steps label */}
+            <div className="px-4 mb-3">
+              <button
+                className="flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-slate-600 transition-colors"
+                onClick={() => setAiStepsOpen((o) => !o)}
+              >
+                <Sparkles className="h-3 w-3 text-blue-400" />
+                <span className="font-medium tracking-wide uppercase">AI steps</span>
+                <ChevronDown className={cn("h-3 w-3 transition-transform", aiStepsOpen && "rotate-180")} />
+              </button>
+            </div>
+
+            {aiStepsOpen && (
+              <>
+                {/* Section 3 — Escalation guidance */}
+                <div className="px-4 space-y-3 mb-4">
+                  <p className="text-[12.5px] text-slate-700 leading-relaxed">
+                    Based on the customer conversation, this issue qualifies as a{" "}
+                    <span className="font-medium text-slate-800">B2B damage claim escalation</span>{" "}
+                    for industrial equipment.
+                  </p>
+                  <p className="text-[12.5px] text-slate-700 leading-relaxed">
+                    The customer reported that three{" "}
+                    <span className="font-medium text-slate-800">IP-5500 industrial pump units</span>{" "}
+                    arrived damaged. Because the order value is high and the account belongs to an enterprise customer, escalation handling is recommended.
+                  </p>
+                  <p className="text-[12.5px] text-slate-700 leading-relaxed">
+                    Now Assist identified the required information needed to create a damage claim case.
+                  </p>
+                </div>
+
+                {/* Section 4 — Extracted entities */}
+                <div className="mx-4 mb-4 rounded-md border border-slate-200 overflow-hidden">
+                  {[
+                    { icon: <Building2 className="h-3 w-3" />, label: "Account", value: "Acme Manufacturing" },
+                    { icon: <User className="h-3 w-3" />, label: "Customer", value: "David Park" },
+                    { icon: <Hash className="h-3 w-3" />, label: "Order Number", value: "AC-PO-49281" },
+                    { icon: <Package className="h-3 w-3" />, label: "Product", value: "IP-5500 Industrial Pump" },
+                    { icon: <Layers className="h-3 w-3" />, label: "Qty Damaged", value: "3 units" },
+                    { icon: <Zap className="h-3 w-3 text-amber-500" />, label: "Priority", value: <span className="text-amber-600 font-medium">High</span> },
+                    { icon: <Shield className="h-3 w-3 text-blue-500" />, label: "Service Tier", value: <span className="text-blue-600 font-medium">Premium Enterprise</span> },
+                  ].map((row, i, arr) => (
+                    <div
+                      key={row.label}
+                      className={cn(
+                        "flex items-center justify-between px-3 py-2 text-[11.5px]",
+                        i < arr.length - 1 && "border-b border-slate-100"
+                      )}
+                    >
+                      <div className="flex items-center gap-2 text-slate-400 shrink-0 w-32">
+                        {row.icon}
+                        <span className="text-slate-500">{row.label}</span>
+                      </div>
+                      <span className="text-slate-800 text-right truncate">{row.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Section 5 — Suggested action */}
+                <div className="mx-4 mb-4">
+                  <button className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-md border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors text-left group">
+                    <FileText className="h-4 w-4 text-blue-500 shrink-0" />
+                    <span className="text-[12.5px] font-medium text-blue-700 group-hover:text-blue-800">
+                      Generate escalation case draft
+                    </span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Section 6 — Footer actions */}
+          <div className="border-t border-slate-100 px-4 py-3 shrink-0 bg-slate-50/40">
+            <div className="flex items-center gap-1">
+              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <ThumbsUp className="h-3.5 w-3.5" />
+              </button>
+              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <ThumbsDown className="h-3.5 w-3.5" />
+              </button>
+              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <Copy className="h-3.5 w-3.5" />
+              </button>
+              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <Download className="h-3.5 w-3.5" />
+              </button>
+              <div className="ml-auto">
+                <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-full border border-slate-200 bg-white text-[11px] text-slate-500 hover:text-slate-700 hover:border-slate-300 transition-colors">
+                  <span className="flex -space-x-1">
+                    <span className="h-3 w-3 rounded-full bg-emerald-400 border border-white" />
+                    <span className="h-3 w-3 rounded-full bg-blue-400 border border-white" />
+                    <span className="h-3 w-3 rounded-full bg-violet-400 border border-white" />
+                  </span>
+                  Sources and more
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

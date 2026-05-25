@@ -1,0 +1,130 @@
+We are continuing the existing ServiceNow-inspired enterprise support workspace.
+
+IMPORTANT:
+- Keep all existing layouts unchanged
+- Preserve the current workspace structure
+- UI only
+- No backend
+- No APIs
+- No real AI
+- Mock data only
+- Do NOT redesign the app
+- Focus only on the next interaction step
+
+REFERENCE:
+Use the attached Otto side-panel image as the design reference for styling, spacing, interaction feel, hierarchy, and layout behavior.
+
+GOAL:
+When the user clicks the “Open” button from the escalation toast notification, open a right-side “Now Assist” panel inspired by the attached reference image.
+
+THIS IS NOT A CHATBOT.
+This is an enterprise AI assistance panel.
+
+PANEL BEHAVIOR:
+- Right-side slide-over panel
+- Smooth enterprise animation
+- Opens above the existing workspace
+- Width similar to attached reference
+- Workspace behind remains visible
+- Panel should feel integrated into the ServiceNow experience
+
+PANEL HEADER:
+Top area should contain:
+- Sparkle/AI icon
+- “Now Assist” title
+- Expand icon
+- Pin icon
+- Collapse chevron
+
+STYLE:
+- Minimal
+- Calm
+- Enterprise
+- Functional
+- No flashy gradients
+- No consumer AI aesthetics
+
+MAIN PANEL CONTENT:
+
+SECTION 1 — PLAN TITLE CARD
+
+Add a soft highlighted AI summary card.
+
+Title:
+“Damage Claim Escalation Plan”
+
+Subtext:
+“Now Assist analyzed the conversation and prepared a recommended escalation workflow.”
+
+This card should visually resemble the highlighted bubble in the reference image.
+
+SECTION 2 — AI STEPS LABEL
+
+Small muted label:
+“AI steps”
+
+Add tiny dropdown chevron beside it.
+
+SECTION 3 — ESCALATION RESPONSE CONTENT
+
+Add structured enterprise guidance text.
+
+Content example:
+
+“Based on the customer conversation, this issue qualifies as a B2B damage claim escalation for industrial equipment.”
+
+“The customer reported that three IP-5500 industrial pump units arrived damaged. Because the order value is high and the account belongs to an enterprise customer, escalation handling is recommended.”
+
+“Now Assist identified the required information needed to create a damage claim case.”
+
+SECTION 4 — EXTRACTED ENTITIES
+
+Add compact enterprise info cards or rows for:
+
+- Account: Acme Manufacturing
+- Customer: David Park
+- Order Number: AC-PO-49281
+- Product: IP-5500 Industrial Pump
+- Quantity Damaged: 3
+- Priority: High
+- Service Tier: Premium Enterprise
+
+STYLE:
+- Dense enterprise layout
+- Readable
+- Subtle borders/dividers
+- No oversized cards
+
+SECTION 5 — SUGGESTED ACTION
+
+Add a highlighted actionable link/button:
+
+“Generate escalation case draft”
+
+Include small document/workflow icon.
+
+This is the primary CTA inside the panel.
+
+SECTION 6 — FOOTER ACTIONS
+
+Bottom interaction row similar to reference image:
+- thumbs up
+- thumbs down
+- copy
+- download
+
+Add a muted “Sources and more” button.
+
+IMPORTANT:
+This is still NOT the final case form.
+
+This stage ONLY introduces:
+Toast → Open Now Assist Panel → AI-generated escalation plan.
+
+DO NOT:
+- build editable forms yet
+- add backend logic
+- create real citations
+- redesign workspace layout
+
+Keep everything realistic, enterprise-grade, and minimal.
