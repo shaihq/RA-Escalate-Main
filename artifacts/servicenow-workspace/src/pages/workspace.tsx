@@ -120,7 +120,7 @@ function EmptyStateIllustration() {
   );
 }
 
-function TopNav() {
+function TopNav({ onNowAssist, nowAssistActive }: { onNowAssist?: () => void; nowAssistActive?: boolean }) {
   return (
     <header className="flex items-center h-11 bg-[#1a3a3a] text-white px-3 gap-4 shrink-0">
       <div className="flex items-center shrink-0">
@@ -170,6 +170,22 @@ function TopNav() {
           <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-300 hover:text-white hover:bg-white/10">
             <Bell className="h-4 w-4" />
           </Button>
+          {onNowAssist && (
+            <Button
+              variant="ghost"
+              size="sm"
+              title="Now Assist"
+              onClick={onNowAssist}
+              className={cn(
+                "h-7 w-7 p-0 hover:bg-white/10 transition-colors",
+                nowAssistActive
+                  ? "text-blue-300 bg-white/15"
+                  : "text-gray-300 hover:text-white"
+              )}
+            >
+              <Sparkles className="h-4 w-4" />
+            </Button>
+          )}
           <div className="h-7 w-7 rounded-full bg-orange-400 flex items-center justify-center text-xs font-semibold text-white cursor-pointer select-none">
             A
           </div>
@@ -418,7 +434,10 @@ export default function Workspace() {
           </div>
         </div>
       )}
-      <TopNav />
+      <TopNav
+        onNowAssist={() => nowAssistOpen ? closeNowAssist() : openNowAssist()}
+        nowAssistActive={nowAssistOpen}
+      />
       <div className="flex flex-1 overflow-hidden">
         <IconStrip />
 
