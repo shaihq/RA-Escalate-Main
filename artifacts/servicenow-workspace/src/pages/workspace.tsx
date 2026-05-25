@@ -61,18 +61,18 @@ import {
 type View = "inbox" | "active-call";
 
 const TRANSCRIPT = [
+  { side: "left"  as const, text: "Hi, this is David Park from Acme Manufacturing. I'm calling about order number AC-PO-49281 that arrived yesterday." },
   { side: "right" as const, text: "Hi David, thanks for calling. Let me pull up that order. What can I help you with today?" },
-  { side: "left"  as const, text: "Three of the six industrial pump units we ordered arrived damaged yesterday." },
-  { side: "right" as const, text: "I'm sorry to hear that. Can you confirm what kind of damage you're seeing?" },
-  { side: "left"  as const, text: "The outer packaging looked fine, but once we opened the shipment, the housings were cracked." },
-  { side: "right" as const, text: "Understood. Can you confirm the product model numbers and how many units were affected?" },
-  { side: "left"  as const, text: "They're all IP-5500-A industrial pumps. Three units are damaged. We also took photos during unpacking." },
-  { side: "right" as const, text: "Got it. Since this involves industrial equipment and multiple damaged units, I'll help initiate a damage claim case for you." },
+  { side: "left"  as const, text: "Three of the six industrial pump units we ordered arrived damaged. The packaging looked fine from the outside but when we opened them, the housings are cracked, looks like impact damage. We need to file a claim." },
+  { side: "right" as const, text: "I'm sorry to hear that, David. That's serious. Can you confirm the part numbers of the damaged units?" },
+  { side: "left"  as const, text: "Yeah, they're all model IP-5500-A. Three of them. We have photos and the packing list." },
+  { side: "right" as const, text: "Got it. Given this is industrial equipment and the value is significant, I'll need to open a damage claim case. Our claims team will follow up within 24 hours." },
+  { side: "left"  as const, text: "That works. The units are urgent, we need them for a production line ramp-up next week." },
 ];
 
-// Toast fires only AFTER the final agent message (index 6 = last message, 0-based)
-const ESCALATION_TRIGGER_INDEX = 6;
-const MSG_DELAYS_MS = [900, 2400, 1800, 2600, 1700, 2800, 2000];
+// Toast fires after the agent commits to the damage claim (index 5), before the final customer reply
+const ESCALATION_TRIGGER_INDEX = 5;
+const MSG_DELAYS_MS = [800, 2000, 2600, 1800, 2400, 2000, 2200];
 
 const DETAIL_TABS = [
   { id: "analytics", label: "Call Analytics" },
