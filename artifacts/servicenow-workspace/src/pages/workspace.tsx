@@ -221,6 +221,7 @@ export default function Workspace() {
   const [showToast, setShowToast] = useState(false);
   const [toastExiting, setToastExiting] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toastHasShown = useRef(false);
   const [nowAssistOpen, setNowAssistOpen] = useState(false);
   const [nowAssistExiting, setNowAssistExiting] = useState(false);
   const [aiStepsOpen, setAiStepsOpen] = useState(true);
@@ -236,6 +237,7 @@ export default function Workspace() {
       setVisibleCount(0);
       setShowToast(false);
       setToastExiting(false);
+      toastHasShown.current = false;
       return;
     }
     const id = setInterval(() => setSeconds((s) => s + 1), 1000);
@@ -258,7 +260,8 @@ export default function Workspace() {
   }, [view]);
 
   useEffect(() => {
-    if (visibleCount > ESCALATION_TRIGGER_INDEX && !showToast && !toastExiting) {
+    if (visibleCount > ESCALATION_TRIGGER_INDEX && !toastHasShown.current) {
+      toastHasShown.current = true;
       setShowToast(true);
       setToastExiting(false);
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
