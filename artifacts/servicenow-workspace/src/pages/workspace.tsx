@@ -40,18 +40,21 @@ import {
   ChevronUp,
   Circle,
   Radio,
+  Sparkles,
 } from "lucide-react";
 
 type View = "inbox" | "active-call";
 
 const TRANSCRIPT = [
-  { side: "left" as const, text: "Hi, this is David Park from Acme Manufacturing. I'm calling about order number AC-PO-49281 that arrived yesterday." },
   { side: "right" as const, text: "Hi David, thanks for calling. Let me pull up that order. What can I help you with today?" },
-  { side: "left" as const, text: "Three of the six industrial pump units we ordered arrived damaged. The packaging looked fine from the outside but when we opened them, the housings are cracked, looks like impact damage. We need to file a claim." },
-  { side: "right" as const, text: "I'm sorry to hear that, David. That's serious. Can you confirm the part numbers of the damaged units?" },
-  { side: "left" as const, text: "Yeah, they're all model IP-5500-A. Three of them. We have photos." },
-  { side: "right" as const, text: "Perfect, I can help you file a damage claim right now. I'll create a case and our claims team will reach out within 24 hours." },
+  { side: "left" as const, text: "Three of the six industrial pump units we ordered arrived damaged. The packaging looked fine from the outside but when we opened them, the housings are cracked." },
+  { side: "right" as const, text: "I'm sorry to hear that. Can you confirm the product model and quantity damaged?" },
+  { side: "left" as const, text: "Yeah, they're all model IP-5500-A. Three of them are damaged. We have photos as well." },
+  { side: "right" as const, text: "Understood. I can help initiate a damage claim for this shipment." },
 ];
+
+const ESCALATION_TRIGGER_INDEX = 1;
+const MSG_DELAYS_MS = [800, 2200, 1600, 2000, 1800];
 
 const DETAIL_TABS = [
   { id: "analytics", label: "Call Analytics" },
@@ -199,6 +202,11 @@ export default function Workspace() {
     shortDescription: "User contact via phone +18587200477",
   });
 
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [showToast, setShowToast] = useState(false);
+  const [toastExiting, setToastExiting] = useState(false);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const transcriptRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -207,6 +215,9 @@ export default function Workspace() {
       setIsMuted(false);
       setIsHeld(false);
       setIsRec(false);
+      setVisibleCount(0);
+      setShowToast(false);
+      setToastExiting(false);
       return;
     }
     const id = setInterval(() => setSeconds((s) => s + 1), 1000);
@@ -214,10 +225,42 @@ export default function Workspace() {
   }, [view]);
 
   useEffect(() => {
+    if (view !== "active-call") return;
+    setVisibleCount(0);
+    let accumulated = 0;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    TRANSCRIPT.forEach((_, i) => {
+      accumulated += MSG_DELAYS_MS[i] ?? 1500;
+      const t = setTimeout(() => {
+        setVisibleCount((c) => Math.max(c, i + 1));
+      }, accumulated);
+      timers.push(t);
+    });
+    return () => timers.forEach(clearTimeout);
+  }, [view]);
+
+  useEffect(() => {
+    if (visibleCount > ESCALATION_TRIGGER_INDEX && !showToast && !toastExiting) {
+      setShowToast(true);
+      setToastExiting(false);
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = setTimeout(() => dismissToast(), 5500);
+    }
+  }, [visibleCount]);
+
+  function dismissToast() {
+    setToastExiting(true);
+    setTimeout(() => {
+      setShowToast(false);
+      setToastExiting(false);
+    }, 240);
+  }
+
+  useEffect(() => {
     if (view === "active-call" && transcriptRef.current) {
       transcriptRef.current.scrollTop = transcriptRef.current.scrollHeight;
     }
-  }, [view]);
+  }, [view, visibleCount]);
 
   if (view === "inbox") {
     return (
@@ -302,7 +345,43 @@ export default function Workspace() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-full bg-background overflow-hidden">
+    <div className="flex flex-col h-screen w-full bg-background overflow-hidden relative">
+      {showToast && (
+        <div
+          className={cn(
+            "fixed top-14 right-4 z-50 w-80 rounded-lg border border-blue-200 bg-white shadow-lg shadow-blue-900/8 pointer-events-auto",
+            toastExiting ? "toast-exit" : "toast-enter"
+          )}
+          style={{ backdropFilter: "blur(2px)" }}
+        >
+          <div className="flex items-start gap-3 px-3.5 py-3">
+            <div className="mt-0.5 h-7 w-7 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+              <Sparkles className="h-3.5 w-3.5 text-blue-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-semibold text-slate-700 leading-tight mb-0.5">Now Assist</p>
+              <p className="text-xs text-slate-600 leading-snug">
+                Now Assist has a plan for solving{" "}
+                <span className="font-medium text-blue-600">IMS00000123</span>. Open Now Assist Panel to view the plan.
+              </p>
+              <div className="mt-2">
+                <Button
+                  size="sm"
+                  className="h-6 px-2.5 text-[11px] bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Open
+                </Button>
+              </div>
+            </div>
+            <button
+              className="mt-0.5 h-5 w-5 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors shrink-0"
+              onClick={dismissToast}
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </div>
+        </div>
+      )}
       <TopNav />
       <div className="flex flex-1 overflow-hidden">
         <IconStrip />
@@ -393,10 +472,10 @@ export default function Workspace() {
             <span className="text-xs font-medium text-muted-foreground">Call transcript</span>
           </div>
           <div ref={transcriptRef} className="flex-1 overflow-y-auto px-3 pb-3 space-y-3">
-            {TRANSCRIPT.map((msg, i) => (
-              <div key={i} className={cn("flex items-end gap-2", msg.side === "right" && "flex-row-reverse")}>
+            {TRANSCRIPT.slice(0, visibleCount).map((msg, i) => (
+              <div key={i} className={cn("flex items-end gap-2 msg-animate-in", msg.side === "right" && "flex-row-reverse")}>
                 <div className="h-6 w-6 rounded-full shrink-0 flex items-center justify-center text-[10px] font-bold text-white bg-slate-400 select-none">
-                  {msg.side === "left" ? "SR" : "A"}
+                  {msg.side === "left" ? "DP" : "A"}
                 </div>
                 <div className={cn(
                   "max-w-[80%] rounded-lg px-2.5 py-1.5 text-xs leading-relaxed",
@@ -408,6 +487,13 @@ export default function Workspace() {
                 </div>
               </div>
             ))}
+            {visibleCount < TRANSCRIPT.length && (
+              <div className="flex items-center gap-1.5 px-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "0ms" }} />
+                <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "150ms" }} />
+                <span className="h-1.5 w-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: "300ms" }} />
+              </div>
+            )}
           </div>
         </div>
 

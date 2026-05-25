@@ -1,0 +1,93 @@
+We are building a ServiceNow-inspired enterprise customer support workspace in React.
+
+IMPORTANT:
+- UI only
+- No backend
+- No APIs
+- No real AI
+- No database
+- Mock data only
+- Keep all existing layouts and styling unchanged
+- Do NOT redesign the workspace
+- Focus only on interaction behavior and UI flow
+
+CURRENT UI ALREADY EXISTS:
+- Inbox panel with incoming call card
+- Accept button
+- Active call workspace
+- Transcript section
+- Center interaction panel
+- Right insights panel
+
+GOAL:
+Create an interactive B2B damage-claim conversation flow after the agent accepts the incoming call.
+
+FLOW REQUIREMENTS:
+
+1. ACCEPT CALL INTERACTION
+When the agent clicks “Accept”:
+- Transition from inbox state into active call workspace
+- Animate the workspace smoothly into view
+- Open the existing interaction screen
+
+2. INTERACTIVE TRANSCRIPT FLOW
+The transcript should NOT appear all at once.
+
+Instead:
+- Messages should appear progressively one by one
+- Simulate a real-time live support conversation
+- Add slight delays between each message
+- Use subtle fade/slide animation
+- Auto-scroll transcript downward as new messages appear
+
+CONVERSATION:
+
+Agent:
+“Hi David, thanks for calling. Let me pull up that order. What can I help you with today?”
+
+Customer:
+“Three of the six industrial pump units we ordered arrived damaged. The packaging looked fine from the outside but when we opened them, the housings are cracked.”
+
+Agent:
+“I’m sorry to hear that. Can you confirm the product model and quantity damaged?”
+
+Customer:
+“Yeah, they’re all model IP-5500-A. Three of them are damaged. We have photos as well.”
+
+Agent:
+“Understood. I can help initiate a damage claim for this shipment.”
+
+3. ESCALATION DETECTION TOAST
+As soon as the transcript reaches:
+- “arrived damaged”
+OR
+- “damage claim”
+OR
+- “three of them are damaged”
+
+Animate in a toast notification.
+
+TOAST CONTENT:
+“Now Assist has a plan for solving IMS00000123. Open Now Assist Panel to view the plan.”
+
+TOAST REQUIREMENTS:
+- Top-right placement
+- Enterprise minimal design
+- ServiceNow-style
+- Small subtle AI/sparkle icon
+- Smooth slide/fade entrance animation
+- Calm blue/neutral appearance
+- Include:
+  - “Open” button
+  - close icon
+- Auto-dismiss after a few seconds
+- Toast should feel contextual and intelligent, not flashy
+
+IMPORTANT:
+- Do NOT build the Now Assist panel yet
+- Do NOT add extra AI widgets
+- Keep implementation focused only on:
+Accept Call → Progressive Conversation → Escalation Toast
+
+Do not modify unrelated UI sections.
+Keep the experience realistic, calm, and enterprise-grade.
