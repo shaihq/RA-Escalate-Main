@@ -851,14 +851,14 @@ export default function Workspace() {
                 </button>
               </div>
 
-              {/* CTA — Generate case draft */}
-              <div className="pt-1 space-y-2">
-                <p className="text-[13px] text-slate-500">
-                  Click below to generate a pre-filled escalation case draft.
-                </p>
-                <button className="flex items-center gap-2 px-4 py-2 rounded-md border border-slate-300 bg-white hover:bg-slate-50 transition-colors text-[13px] text-slate-700 font-medium shadow-sm">
-                  <FileText className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-                  Generate escalation case draft
+              {/* CTA — Save / Edit */}
+              <div className="pt-1 flex items-center gap-2">
+                <button className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition-colors text-[13px] text-white font-medium shadow-sm">
+                  <FileText className="h-3.5 w-3.5 shrink-0" />
+                  Save and Create Case
+                </button>
+                <button className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-md border border-slate-300 bg-white hover:bg-slate-50 transition-colors text-[13px] text-slate-700 font-medium shadow-sm">
+                  Edit
                 </button>
               </div>
 
