@@ -745,12 +745,12 @@ export default function Workspace() {
       {nowAssistOpen && (
         <div
           className={cn(
-            "fixed top-0 right-0 h-full w-[340px] bg-white border-l border-slate-200 shadow-2xl shadow-slate-900/15 z-40 flex flex-col",
+            "fixed top-0 right-0 h-full w-[360px] bg-white border-l border-slate-200 shadow-2xl shadow-slate-900/15 z-40 flex flex-col",
             nowAssistExiting ? "now-assist-exit" : "now-assist-enter"
           )}
         >
           {/* Panel header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0 bg-slate-50/60">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0">
             <div className="flex items-center gap-2">
               <div className="h-6 w-6 rounded bg-blue-600 flex items-center justify-center shrink-0">
                 <Sparkles className="h-3.5 w-3.5 text-white" />
@@ -773,115 +773,117 @@ export default function Workspace() {
             </div>
           </div>
 
-          {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto">
-            {/* Section 1 — Plan title card */}
-            <div className="mx-4 mt-4 mb-3 rounded-lg bg-[#eaf4fb] border border-blue-100 px-4 py-3.5">
-              <p className="text-sm font-semibold text-slate-800 leading-snug mb-1">
+          {/* Chat area */}
+          <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
+
+            {/* AI Steps breadcrumb */}
+            <button
+              className="flex items-center gap-1.5 text-[12px] text-slate-400 hover:text-slate-600 transition-colors"
+              onClick={() => setAiStepsOpen((o) => !o)}
+            >
+              <span className="font-medium">AI Steps</span>
+              <ChevronRight className={cn("h-3.5 w-3.5 transition-transform", aiStepsOpen && "rotate-90")} />
+            </button>
+
+            {/* Chat message block */}
+            <div className="space-y-4">
+              {/* Bold prompt / question */}
+              <p className="text-[15px] font-semibold text-slate-900 leading-snug">
                 Damage Claim Escalation Plan
               </p>
-              <p className="text-[11.5px] text-slate-500 leading-relaxed">
-                Now Assist analyzed the conversation and prepared a recommended escalation workflow.
-              </p>
-            </div>
 
-            {/* Section 2 — AI steps label */}
-            <div className="px-4 mb-3">
-              <button
-                className="flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-slate-600 transition-colors"
-                onClick={() => setAiStepsOpen((o) => !o)}
-              >
-                <Sparkles className="h-3 w-3 text-blue-400" />
-                <span className="font-medium tracking-wide uppercase">AI steps</span>
-                <ChevronDown className={cn("h-3 w-3 transition-transform", aiStepsOpen && "rotate-180")} />
-              </button>
-            </div>
-
-            {aiStepsOpen && (
-              <>
-                {/* Section 3 — Escalation guidance */}
-                <div className="px-4 space-y-3 mb-4">
-                  <p className="text-[12.5px] text-slate-700 leading-relaxed">
+              {/* AI response body */}
+              {aiStepsOpen && (
+                <div className="space-y-3">
+                  <p className="text-[13.5px] text-slate-700 leading-relaxed">
                     Based on the customer conversation, this issue qualifies as a{" "}
-                    <span className="font-medium text-slate-800">B2B damage claim escalation</span>{" "}
+                    <span className="font-medium text-slate-900">B2B damage claim escalation</span>{" "}
                     for industrial equipment.
                   </p>
-                  <p className="text-[12.5px] text-slate-700 leading-relaxed">
+                  <p className="text-[13.5px] text-slate-700 leading-relaxed">
                     The customer reported that three{" "}
-                    <span className="font-medium text-slate-800">IP-5500 industrial pump units</span>{" "}
-                    arrived damaged. Because the order value is high and the account belongs to an enterprise customer, escalation handling is recommended.
+                    <span className="font-medium text-slate-900">IP-5500 industrial pump units</span>{" "}
+                    arrived damaged. The order value is high and the account belongs to an enterprise customer — escalation handling is recommended.
                   </p>
-                  <p className="text-[12.5px] text-slate-700 leading-relaxed">
-                    Now Assist identified the required information needed to create a damage claim case.
+                  <p className="text-[13.5px] text-slate-700 leading-relaxed">
+                    Now Assist has identified the required details to create a damage claim case:
                   </p>
+                  {/* Inline entity list */}
+                  <ul className="text-[13px] text-slate-600 space-y-1.5 pl-1">
+                    {[
+                      ["Account", "Acme Manufacturing"],
+                      ["Customer", "David Park"],
+                      ["Order", "AC-PO-49281"],
+                      ["Product", "IP-5500 Industrial Pump"],
+                      ["Qty Damaged", "3 units"],
+                      ["Priority", "High"],
+                      ["Service Tier", "Premium Enterprise"],
+                    ].map(([label, value]) => (
+                      <li key={label} className="flex items-baseline gap-1.5">
+                        <span className="text-slate-400 shrink-0">{label}:</span>
+                        <span className="font-medium text-slate-800">{value}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+              )}
 
-                {/* Section 4 — Extracted entities */}
-                <div className="mx-4 mb-4 rounded-md border border-slate-200 overflow-hidden">
-                  {[
-                    { icon: <Building2 className="h-3 w-3" />, label: "Account", value: "Acme Manufacturing" },
-                    { icon: <User className="h-3 w-3" />, label: "Customer", value: "David Park" },
-                    { icon: <Hash className="h-3 w-3" />, label: "Order Number", value: "AC-PO-49281" },
-                    { icon: <Package className="h-3 w-3" />, label: "Product", value: "IP-5500 Industrial Pump" },
-                    { icon: <Layers className="h-3 w-3" />, label: "Qty Damaged", value: "3 units" },
-                    { icon: <Zap className="h-3 w-3 text-amber-500" />, label: "Priority", value: <span className="text-amber-600 font-medium">High</span> },
-                    { icon: <Shield className="h-3 w-3 text-blue-500" />, label: "Service Tier", value: <span className="text-blue-600 font-medium">Premium Enterprise</span> },
-                  ].map((row, i, arr) => (
-                    <div
-                      key={row.label}
-                      className={cn(
-                        "flex items-center justify-between px-3 py-2 text-[11.5px]",
-                        i < arr.length - 1 && "border-b border-slate-100"
-                      )}
-                    >
-                      <div className="flex items-center gap-2 text-slate-400 shrink-0 w-32">
-                        {row.icon}
-                        <span className="text-slate-500">{row.label}</span>
-                      </div>
-                      <span className="text-slate-800 text-right truncate">{row.value}</span>
-                    </div>
-                  ))}
-                </div>
+              {/* Feedback icons */}
+              <div className="flex items-center gap-0.5 pt-1">
+                <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                  <ThumbsUp className="h-3.5 w-3.5" />
+                </button>
+                <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                  <ThumbsDown className="h-3.5 w-3.5" />
+                </button>
+                <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+                <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                  <Download className="h-3.5 w-3.5" />
+                </button>
+              </div>
 
-                {/* Section 5 — Suggested action */}
-                <div className="mx-4 mb-4">
-                  <button className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-md border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors text-left group">
-                    <FileText className="h-4 w-4 text-blue-500 shrink-0" />
-                    <span className="text-[12.5px] font-medium text-blue-700 group-hover:text-blue-800">
-                      Generate escalation case draft
-                    </span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+              {/* CTA — Generate case draft */}
+              <div className="pt-1 space-y-2">
+                <p className="text-[13px] text-slate-500">
+                  Click below to generate a pre-filled escalation case draft.
+                </p>
+                <button className="flex items-center gap-2 px-4 py-2 rounded-md border border-slate-300 bg-white hover:bg-slate-50 transition-colors text-[13px] text-slate-700 font-medium shadow-sm">
+                  <FileText className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                  Generate escalation case draft
+                </button>
+              </div>
 
-          {/* Section 6 — Footer actions */}
-          <div className="border-t border-slate-100 px-4 py-3 shrink-0 bg-slate-50/40">
-            <div className="flex items-center gap-1">
-              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
-                <ThumbsUp className="h-3.5 w-3.5" />
-              </button>
-              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
-                <ThumbsDown className="h-3.5 w-3.5" />
-              </button>
-              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
-                <Copy className="h-3.5 w-3.5" />
-              </button>
-              <button className="h-7 w-7 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
-                <Download className="h-3.5 w-3.5" />
-              </button>
-              <div className="ml-auto">
-                <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-full border border-slate-200 bg-white text-[11px] text-slate-500 hover:text-slate-700 hover:border-slate-300 transition-colors">
+              {/* Sources */}
+              <div className="pt-1">
+                <button className="flex items-center gap-1.5 h-7 px-3 rounded-full border border-slate-200 bg-white text-[11.5px] text-slate-500 hover:text-slate-700 hover:border-slate-300 transition-colors">
                   <span className="flex -space-x-1">
-                    <span className="h-3 w-3 rounded-full bg-emerald-400 border border-white" />
-                    <span className="h-3 w-3 rounded-full bg-blue-400 border border-white" />
-                    <span className="h-3 w-3 rounded-full bg-violet-400 border border-white" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 border border-white" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-blue-400 border border-white" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-violet-400 border border-white" />
                   </span>
                   Sources and more
                 </button>
               </div>
             </div>
+          </div>
+
+          {/* Bottom input area */}
+          <div className="border-t border-slate-100 px-4 pt-3 pb-2 shrink-0">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-slate-50 focus-within:border-slate-300 focus-within:bg-white transition-colors">
+              <input
+                type="text"
+                placeholder="Ask or search anything..."
+                className="flex-1 bg-transparent text-[13px] text-slate-700 placeholder:text-slate-400 outline-none min-w-0"
+              />
+              <button className="h-7 w-7 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center shrink-0 transition-colors">
+                <Mic className="h-3.5 w-3.5 text-white" />
+              </button>
+            </div>
+            <p className="text-center text-[10.5px] text-slate-400 mt-2 pb-1">
+              Some answers generated by AI. Be sure to check for accuracy.
+            </p>
           </div>
         </div>
       )}
