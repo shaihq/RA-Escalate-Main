@@ -62,14 +62,17 @@ type View = "inbox" | "active-call";
 
 const TRANSCRIPT = [
   { side: "right" as const, text: "Hi David, thanks for calling. Let me pull up that order. What can I help you with today?" },
-  { side: "left" as const, text: "Three of the six industrial pump units we ordered arrived damaged. The packaging looked fine from the outside but when we opened them, the housings are cracked." },
-  { side: "right" as const, text: "I'm sorry to hear that. Can you confirm the product model and quantity damaged?" },
-  { side: "left" as const, text: "Yeah, they're all model IP-5500-A. Three of them are damaged. We have photos as well." },
-  { side: "right" as const, text: "Understood. I can help initiate a damage claim for this shipment." },
+  { side: "left"  as const, text: "Three of the six industrial pump units we ordered arrived damaged yesterday." },
+  { side: "right" as const, text: "I'm sorry to hear that. Can you confirm what kind of damage you're seeing?" },
+  { side: "left"  as const, text: "The outer packaging looked fine, but once we opened the shipment, the housings were cracked." },
+  { side: "right" as const, text: "Understood. Can you confirm the product model numbers and how many units were affected?" },
+  { side: "left"  as const, text: "They're all IP-5500-A industrial pumps. Three units are damaged. We also took photos during unpacking." },
+  { side: "right" as const, text: "Got it. Since this involves industrial equipment and multiple damaged units, I'll help initiate a damage claim case for you." },
 ];
 
-const ESCALATION_TRIGGER_INDEX = 1;
-const MSG_DELAYS_MS = [800, 2200, 1600, 2000, 1800];
+// Toast fires only AFTER the final agent message (index 6 = last message, 0-based)
+const ESCALATION_TRIGGER_INDEX = 6;
+const MSG_DELAYS_MS = [900, 2400, 1800, 2600, 1700, 2800, 2000];
 
 const DETAIL_TABS = [
   { id: "analytics", label: "Call Analytics" },
@@ -278,10 +281,14 @@ export default function Workspace() {
   useEffect(() => {
     if (visibleCount > ESCALATION_TRIGGER_INDEX && !toastHasShown.current) {
       toastHasShown.current = true;
-      setShowToast(true);
-      setToastExiting(false);
-      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-      toastTimerRef.current = setTimeout(() => dismissToast(), 5500);
+      // 1-second pause after the final message before the toast animates in
+      const delay = setTimeout(() => {
+        setShowToast(true);
+        setToastExiting(false);
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = setTimeout(() => dismissToast(), 5500);
+      }, 1000);
+      return () => clearTimeout(delay);
     }
   }, [visibleCount]);
 

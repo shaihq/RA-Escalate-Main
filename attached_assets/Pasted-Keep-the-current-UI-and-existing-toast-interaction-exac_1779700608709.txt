@@ -1,0 +1,70 @@
+Keep the current UI and existing toast interaction exactly as it is.
+
+We are ONLY refining the transcript conversation flow and the escalation trigger timing.
+
+IMPORTANT:
+- Do not redesign layouts
+- Do not modify the toast design
+- Do not modify panel structure
+- Focus only on conversation realism and escalation pacing
+
+GOAL:
+The conversation should feel like a real enterprise B2B support escalation workflow.
+
+CURRENT ISSUE:
+The AI toast appears too early and the escalation feels abrupt.
+
+Instead, the conversation should progressively build context before the escalation trigger happens.
+
+UPDATE THE CONVERSATION FLOW TO THIS:
+
+Agent:
+“Hi David, thanks for calling. Let me pull up that order. What can I help you with today?”
+
+Customer:
+“Three of the six industrial pump units we ordered arrived damaged yesterday.”
+
+Agent:
+“I’m sorry to hear that. Can you confirm what kind of damage you’re seeing?”
+
+Customer:
+“The outer packaging looked fine, but once we opened the shipment, the housings were cracked.”
+
+Agent:
+“Understood. Can you confirm the product model numbers and how many units were affected?”
+
+Customer:
+“They’re all IP-5500-A industrial pumps. Three units are damaged. We also took photos during unpacking.”
+
+Agent:
+“Got it. Since this involves industrial equipment and multiple damaged units, I’ll help initiate a damage claim case for you.”
+
+IMPORTANT:
+ONLY after the final agent message:
+“I’ll help initiate a damage claim case for you.”
+
+THEN:
+Animate in the existing Now Assist toast.
+
+WHY:
+The AI should appear after:
+- issue identification
+- clarification
+- quantity confirmation
+- evidence confirmation
+- escalation acknowledgment
+
+This makes the workflow feel intelligent and operationally realistic.
+
+TRANSCRIPT BEHAVIOR:
+- Messages should still appear progressively
+- Keep existing animation behavior
+- Keep typing delays realistic
+- Keep auto-scroll behavior
+
+OPTIONAL NICE TOUCH:
+Before the toast appears:
+- add a subtle 1-second pause
+- then animate the toast in smoothly
+
+This will make the AI feel more contextual and intentional.
